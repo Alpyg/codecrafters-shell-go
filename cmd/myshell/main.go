@@ -49,8 +49,12 @@ prompt:
 			wd, _ := os.Getwd()
 			fmt.Printf("%s\n", wd)
 		case "cd":
-			if err := os.Chdir(cmds[1]); err != nil {
-				fmt.Printf("cd: %s: No such file or directory\n", cmds[1])
+			path := cmds[1]
+			if cmds[1] == "~" {
+				path = os.Getenv("HOME")
+			}
+			if err := os.Chdir(path); err != nil {
+				fmt.Printf("cd: %s: No such file or directory\n", path)
 			}
 		default:
 			cmd := exec.Command(cmds[0], cmds[1:]...)
