@@ -4,11 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
 
 func main() {
+prompt:
 	for {
 		fmt.Fprint(os.Stdout, "$ ")
 
@@ -33,6 +35,13 @@ func main() {
 			case "exit", "echo", "type":
 				fmt.Printf("%s is a shell builtin\n", cmds[1])
 			default:
+				for _, path := range strings.Split(os.Getenv("PATH"), ":") {
+					fp := filepath.Join(path, cmds[1])
+					if _, err := os.Stat(fp); err == nil {
+						fmt.Printf("%s is %s\n", cmds[1], fp)
+						continue prompt
+					}
+				}
 				fmt.Printf("%s: not found\n", cmds[1])
 			}
 		default:
