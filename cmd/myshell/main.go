@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -33,7 +33,7 @@ prompt:
 			fmt.Fprintf(os.Stdout, "%s\n", strings.Join(cmds[1:], " "))
 		case "type":
 			switch cmds[1] {
-			case "exit", "echo", "type":
+			case "exit", "echo", "type", "pwd":
 				fmt.Printf("%s is a shell builtin\n", cmds[1])
 			default:
 				for _, path := range strings.Split(os.Getenv("PATH"), ":") {
@@ -45,6 +45,9 @@ prompt:
 				}
 				fmt.Printf("%s: not found\n", cmds[1])
 			}
+		case "pwd":
+			wd, _ := os.Getwd()
+			fmt.Printf("%s\n", wd)
 		default:
 			cmd := exec.Command(cmds[0], cmds[1:]...)
 			cmd.Stdout = os.Stdout
