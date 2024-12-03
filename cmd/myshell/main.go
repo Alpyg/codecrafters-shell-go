@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -45,7 +46,14 @@ prompt:
 				fmt.Printf("%s: not found\n", cmds[1])
 			}
 		default:
-			fmt.Printf("%s: command not found\n", cmd)
+			cmd := exec.Command(cmds[0], cmds[1:]...)
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+
+			err := cmd.Run()
+			if err != nil {
+				fmt.Printf("%s: command not found\n", cmd)
+			}
 		}
 	}
 }
