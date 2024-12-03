@@ -9,11 +9,9 @@ import (
 )
 
 func main() {
-	// Uncomment this block to pass the first stage
 	for {
 		fmt.Fprint(os.Stdout, "$ ")
 
-		// Wait for user input
 		cmd, err := bufio.NewReader(os.Stdin).ReadString('\n')
 		if err != nil {
 			os.Exit(1)
@@ -30,6 +28,13 @@ func main() {
 			os.Exit(code)
 		case "echo":
 			fmt.Fprintf(os.Stdout, "%s\n", strings.Join(cmds[1:], " "))
+		case "type":
+			switch cmds[1] {
+			case "exit", "echo", "type":
+				fmt.Printf("%s is a shell builtin\n", cmds[1])
+			default:
+				fmt.Printf("%s: not found\n", cmds[1])
+			}
 		default:
 			fmt.Printf("%s: command not found\n", cmd)
 		}
